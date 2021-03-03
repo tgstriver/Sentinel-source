@@ -21,8 +21,7 @@ import com.alibaba.csp.sentinel.init.InitExecutor;
  * Sentinel Env. This class will trigger all initialization for Sentinel.
  *
  * <p>
- * NOTE: to prevent deadlocks, other classes' static code block or static field should
- * NEVER refer to this class.
+ * 为了防止死锁，其他类的静态代码块或静态字段永远不要引用这个类
  * </p>
  *
  * @author jialiang.linjl

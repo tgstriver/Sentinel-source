@@ -34,7 +34,7 @@ public final class Constants {
     public static final String SENTINEL_VERSION = VersionUtil.getVersion("1.7.2");
 
     public final static int MAX_CONTEXT_NAME_SIZE = 2000;
-    public final static int MAX_SLOT_CHAIN_SIZE = 6000;
+    public final static int MAX_SLOT_CHAIN_SIZE = 6000; // 功能插槽的最大数量
 
     public final static String ROOT_ID = "machine-root";
     public final static String CONTEXT_DEFAULT_NAME = "sentinel_default_context";
@@ -58,7 +58,7 @@ public final class Constants {
      * Global ROOT statistic node that represents the universal parent node.
      */
     public final static DefaultNode ROOT = new EntranceNode(new StringResourceWrapper(ROOT_ID, EntryType.IN),
-        new ClusterNode(ROOT_ID, ResourceTypeConstants.COMMON));
+            new ClusterNode(ROOT_ID, ResourceTypeConstants.COMMON));
 
     /**
      * Global statistic node for inbound traffic. Usually used for {@code SystemRule} checking.
@@ -70,5 +70,6 @@ public final class Constants {
      */
     public static volatile boolean ON = true;
 
-    private Constants() {}
+    private Constants() {
+    }
 }

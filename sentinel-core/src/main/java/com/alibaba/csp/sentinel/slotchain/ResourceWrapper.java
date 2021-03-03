@@ -19,7 +19,7 @@ import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 
 /**
- * A wrapper of resource name and type.
+ * 资源名称和类型的包装器
  *
  * @author qinan.qn
  * @author jialiang.linjl
@@ -32,7 +32,7 @@ public abstract class ResourceWrapper {
     protected final EntryType entryType;
     protected final int resourceType;
 
-    public ResourceWrapper(String name, EntryType entryType, int resourceType) {
+    protected ResourceWrapper(String name, EntryType entryType, int resourceType) {
         AssertUtil.notEmpty(name, "resource name cannot be empty");
         AssertUtil.notNull(entryType, "entryType cannot be null");
         this.name = name;
@@ -89,7 +89,7 @@ public abstract class ResourceWrapper {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ResourceWrapper) {
-            ResourceWrapper rw = (ResourceWrapper)obj;
+            ResourceWrapper rw = (ResourceWrapper) obj;
             return rw.getName().equals(getName());
         }
         return false;

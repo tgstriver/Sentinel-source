@@ -15,9 +15,9 @@
  */
 package com.alibaba.csp.sentinel.spi;
 
-import java.util.ServiceLoader;
-
 import com.alibaba.csp.sentinel.config.SentinelConfig;
+
+import java.util.ServiceLoader;
 
 /**
  * @author Eric Zhao
@@ -41,5 +41,6 @@ public final class ServiceLoaderUtil {
         return CLASSLOADER_CONTEXT.equalsIgnoreCase(classloaderConf);
     }
 
-    private ServiceLoaderUtil() {}
+    private ServiceLoaderUtil() {
+    }
 }

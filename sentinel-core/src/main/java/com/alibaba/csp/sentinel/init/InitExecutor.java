@@ -15,44 +15,45 @@
  */
 package com.alibaba.csp.sentinel.init;
 
+import com.alibaba.csp.sentinel.log.RecordLog;
+import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.alibaba.csp.sentinel.log.RecordLog;
-import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
-
 /**
- * Load registered init functions and execute in order.
+ * 加载已注册的init函数并按顺序执行
  *
  * @author Eric Zhao
  */
 public final class InitExecutor {
 
-    private static AtomicBoolean initialized = new AtomicBoolean(false);
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
     /**
-     * If one {@link InitFunc} throws an exception, the init process
-     * will immediately be interrupted and the application will exit.
-     *
-     * The initialization will be executed only once.
+     * 如果一个{@link InitFunc}抛出异常，init进程将立即中断，应用程序将退出
+     * <p>
+     * 初始化只会执行一次
      */
     public static void doInit() {
         if (!initialized.compareAndSet(false, true)) {
             return;
         }
+
         try {
             ServiceLoader<InitFunc> loader = ServiceLoaderUtil.getServiceLoader(InitFunc.class);
-            List<OrderWrapper> initList = new ArrayList<OrderWrapper>();
+            List<OrderWrapper> initList = new ArrayList<>();
             for (InitFunc initFunc : loader) {
                 RecordLog.info("[InitExecutor] Found init func: " + initFunc.getClass().getCanonicalName());
                 insertSorted(initList, initFunc);
             }
+
             for (OrderWrapper w : initList) {
                 w.func.init();
                 RecordLog.info(String.format("[InitExecutor] Executing %s with order %d",
-                    w.func.getClass().getCanonicalName(), w.order));
+                        w.func.getClass().getCanonicalName(), w.order));
             }
         } catch (Exception ex) {
             RecordLog.warn("[InitExecutor] WARN: Initialization failed", ex);
@@ -71,9 +72,16 @@ public final class InitExecutor {
                 break;
             }
         }
+
         list.add(idx, new OrderWrapper(order, func));
     }
 
+    /**
+     * 解析InitFunc上的InitOrder注解
+     *
+     * @param func
+     * @return
+     */
     private static int resolveOrder(InitFunc func) {
         if (!func.getClass().isAnnotationPresent(InitOrder.class)) {
             return InitOrder.LOWEST_PRECEDENCE;
@@ -82,7 +90,8 @@ public final class InitExecutor {
         }
     }
 
-    private InitExecutor() {}
+    private InitExecutor() {
+    }
 
     private static class OrderWrapper {
         private final int order;

@@ -84,5 +84,6 @@ public class RecordLog {
         logger.error(msg, e);
     }
 
-    private RecordLog() {}
+    private RecordLog() {
+    }
 }

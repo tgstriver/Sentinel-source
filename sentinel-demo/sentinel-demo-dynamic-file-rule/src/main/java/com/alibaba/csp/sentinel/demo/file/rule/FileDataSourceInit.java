@@ -15,9 +15,6 @@
  */
 package com.alibaba.csp.sentinel.demo.file.rule;
 
-import java.io.File;
-import java.util.List;
-
 import com.alibaba.csp.sentinel.datasource.FileRefreshableDataSource;
 import com.alibaba.csp.sentinel.datasource.FileWritableDataSource;
 import com.alibaba.csp.sentinel.datasource.ReadableDataSource;
@@ -28,6 +25,9 @@ import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
 import com.alibaba.csp.sentinel.transport.util.WritableDataSourceRegistry;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
+
+import java.io.File;
+import java.util.List;
 
 /**
  * <p>
@@ -51,7 +51,8 @@ public class FileDataSourceInit implements InitFunc {
         String flowRulePath = flowRuleDir + File.separator + flowRuleFile;
 
         ReadableDataSource<String, List<FlowRule>> ds = new FileRefreshableDataSource<>(
-            flowRulePath, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {})
+                flowRulePath, source -> JSON.parseObject(source, new TypeReference<List<FlowRule>>() {
+        })
         );
         // Register to flow rule manager.
         FlowRuleManager.register2Property(ds.getProperty());

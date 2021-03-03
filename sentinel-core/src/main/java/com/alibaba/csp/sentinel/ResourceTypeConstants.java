@@ -27,5 +27,6 @@ public final class ResourceTypeConstants {
     public static final int COMMON_API_GATEWAY = 3;
     public static final int COMMON_DB_SQL = 4;
 
-    private ResourceTypeConstants() {}
+    private ResourceTypeConstants() {
+    }
 }

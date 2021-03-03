@@ -15,14 +15,6 @@
  */
 package com.alibaba.csp.sentinel.slots.block.degrade;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.alibaba.csp.sentinel.config.SentinelConfig;
 import com.alibaba.csp.sentinel.context.Context;
 import com.alibaba.csp.sentinel.log.RecordLog;
@@ -36,6 +28,14 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.alibaba.csp.sentinel.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * @author youji.zj
  * @author jialiang.linjl
@@ -47,7 +47,7 @@ public final class DegradeRuleManager {
 
     private static final RulePropertyListener LISTENER = new RulePropertyListener();
     private static SentinelProperty<List<DegradeRule>> currentProperty
-        = new DynamicSentinelProperty<>();
+            = new DynamicSentinelProperty<>();
 
     static {
         currentProperty.addListener(LISTENER);
@@ -70,7 +70,7 @@ public final class DegradeRuleManager {
     }
 
     public static void checkDegrade(ResourceWrapper resource, Context context, DefaultNode node, int count)
-        throws BlockException {
+            throws BlockException {
 
         Set<DegradeRule> rules = degradeRules.get(resource.getName());
         if (rules == null) {
@@ -147,7 +147,7 @@ public final class DegradeRuleManager {
             return currentProperty.updateValue(allRules);
         } catch (Throwable e) {
             RecordLog.warn(
-                "[DegradeRuleManager] Unexpected error when setting degrade rules for resource: " + resourceName, e);
+                    "[DegradeRuleManager] Unexpected error when setting degrade rules for resource: " + resourceName, e);
             return false;
         }
     }
@@ -184,7 +184,7 @@ public final class DegradeRuleManager {
             for (DegradeRule rule : list) {
                 if (!isValidRule(rule)) {
                     RecordLog.warn(
-                        "[DegradeRuleManager] Ignoring invalid degrade rule when loading new rules: " + rule);
+                            "[DegradeRuleManager] Ignoring invalid degrade rule when loading new rules: " + rule);
                     continue;
                 }
 
@@ -207,7 +207,7 @@ public final class DegradeRuleManager {
 
     public static boolean isValidRule(DegradeRule rule) {
         boolean baseValid = rule != null && !StringUtil.isBlank(rule.getResource())
-            && rule.getCount() >= 0 && rule.getTimeWindow() > 0;
+                && rule.getCount() >= 0 && rule.getTimeWindow() > 0;
         if (!baseValid) {
             return false;
         }
@@ -219,8 +219,8 @@ public final class DegradeRuleManager {
             // Warn for RT mode that exceeds the {@code TIME_DROP_VALVE}.
             if (rule.getCount() > maxAllowedRt) {
                 RecordLog.warn(String.format("[DegradeRuleManager] WARN: setting large RT threshold (%.1f ms)"
-                        + " in RT mode will not take effect since it exceeds the max allowed value (%d ms)",
-                    rule.getCount(), maxAllowedRt));
+                                + " in RT mode will not take effect since it exceeds the max allowed value (%d ms)",
+                        rule.getCount(), maxAllowedRt));
             }
         }
 

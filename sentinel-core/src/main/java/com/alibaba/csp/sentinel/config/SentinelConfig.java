@@ -77,6 +77,7 @@ public final class SentinelConfig {
                 appType = APP_TYPE_COMMON;
                 return;
             }
+
             appType = Integer.parseInt(type);
             if (appType < 0) {
                 appType = APP_TYPE_COMMON;
@@ -211,5 +212,6 @@ public final class SentinelConfig {
         }
     }
 
-    private SentinelConfig() {}
+    private SentinelConfig() {
+    }
 }

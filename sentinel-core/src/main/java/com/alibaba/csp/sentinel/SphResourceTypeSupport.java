@@ -26,26 +26,26 @@ public interface SphResourceTypeSupport {
     /**
      * Create a protected resource with provided classification.
      *
-     * @param name the unique name of the protected resource
+     * @param name         the unique name of the protected resource
      * @param resourceType the classification of the resource
-     * @param entryType the traffic entry type (IN/OUT) of the resource
-     * @param count tokens required
-     * @param args  extra parameters
+     * @param entryType    the traffic entry type (IN/OUT) of the resource
+     * @param count        tokens required
+     * @param args         extra parameters
      * @return new entry of the resource
      * @throws BlockException if the block criteria is met
      */
     Entry entryWithType(String name, int resourceType, EntryType entryType, int count, Object[] args)
-        throws BlockException;
+            throws BlockException;
 
     /**
      * Create a protected resource with provided classification.
      *
-     * @param name the unique name of the protected resource
+     * @param name         the unique name of the protected resource
      * @param resourceType the classification of the resource
-     * @param entryType the traffic entry type (IN/OUT) of the resource
-     * @param count tokens required
-     * @param prioritized whether the entry is prioritized
-     * @param args  extra parameters
+     * @param entryType    the traffic entry type (IN/OUT) of the resource
+     * @param count        tokens required
+     * @param prioritized  whether the entry is prioritized
+     * @param args         extra parameters
      * @return new entry of the resource
      * @throws BlockException if the block criteria is met
      */
@@ -55,12 +55,12 @@ public interface SphResourceTypeSupport {
     /**
      * Create an asynchronous resource with provided classification.
      *
-     * @param name the unique name of the protected resource
+     * @param name         the unique name of the protected resource
      * @param resourceType the classification of the resource
-     * @param entryType the traffic entry type (IN/OUT) of the resource
-     * @param count tokens required
-     * @param prioritized whether the entry is prioritized
-     * @param args  extra parameters
+     * @param entryType    the traffic entry type (IN/OUT) of the resource
+     * @param count        tokens required
+     * @param prioritized  whether the entry is prioritized
+     * @param args         extra parameters
      * @return new entry of the resource
      * @throws BlockException if the block criteria is met
      */

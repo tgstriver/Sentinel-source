@@ -15,19 +15,19 @@
  */
 package com.alibaba.csp.sentinel.demo.flow;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import com.alibaba.csp.sentinel.util.TimeUtil;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRule;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleManager;
+import com.alibaba.csp.sentinel.util.TimeUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author jialiang.linjl
@@ -42,9 +42,9 @@ public class FlowQpsDemo {
 
     private static volatile boolean stop = false;
 
-    private static final int threadCount = 32;
+    private static final int threadCount = 1;
 
-    private static int seconds = 60 + 40;
+    private static int seconds = 30;
 
     public static void main(String[] args) throws Exception {
         initFlowQpsRule();
@@ -113,8 +113,8 @@ public class FlowQpsDemo {
 
                 System.out.println(seconds + " send qps is: " + oneSecondTotal);
                 System.out.println(TimeUtil.currentTimeMillis() + ", total:" + oneSecondTotal
-                    + ", pass:" + oneSecondPass
-                    + ", block:" + oneSecondBlock);
+                        + ", pass:" + oneSecondPass
+                        + ", block:" + oneSecondBlock);
 
                 if (seconds-- <= 0) {
                     stop = true;
@@ -124,7 +124,7 @@ public class FlowQpsDemo {
             long cost = System.currentTimeMillis() - start;
             System.out.println("time cost: " + cost + " ms");
             System.out.println("total:" + total.get() + ", pass:" + pass.get()
-                + ", block:" + block.get());
+                    + ", block:" + block.get());
             System.exit(0);
         }
     }

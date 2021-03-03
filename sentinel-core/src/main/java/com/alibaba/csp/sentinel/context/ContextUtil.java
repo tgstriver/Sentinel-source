@@ -15,10 +15,6 @@
  */
 package com.alibaba.csp.sentinel.context;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
-
 import com.alibaba.csp.sentinel.Constants;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphO;
@@ -29,6 +25,10 @@ import com.alibaba.csp.sentinel.node.EntranceNode;
 import com.alibaba.csp.sentinel.node.Node;
 import com.alibaba.csp.sentinel.slotchain.StringResourceWrapper;
 import com.alibaba.csp.sentinel.slots.nodeselector.NodeSelectorSlot;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Utility class to get or create {@link Context} in current thread.
@@ -47,7 +47,7 @@ public class ContextUtil {
     /**
      * Store the context in ThreadLocal for easy access.
      */
-    private static ThreadLocal<Context> contextHolder = new ThreadLocal<>();
+    private static final ThreadLocal<Context> contextHolder = new ThreadLocal<>();
 
     /**
      * Holds all {@link EntranceNode}. Each {@link EntranceNode} is associated with a distinct context name.
@@ -58,7 +58,7 @@ public class ContextUtil {
     private static final Context NULL_CONTEXT = new NullContext();
 
     static {
-        // Cache the entrance node for default context.
+        // 为默认上下文缓存入口节点
         initDefaultContext();
     }
 
@@ -112,7 +112,7 @@ public class ContextUtil {
     public static Context enter(String name, String origin) {
         if (Constants.CONTEXT_DEFAULT_NAME.equals(name)) {
             throw new ContextNameDefineException(
-                "The " + Constants.CONTEXT_DEFAULT_NAME + " can't be permit to defined!");
+                    "The " + Constants.CONTEXT_DEFAULT_NAME + " can't be permit to defined!");
         }
         return trueEnter(name, origin);
     }
@@ -165,7 +165,7 @@ public class ContextUtil {
         // Don't need to be thread-safe.
         if (shouldWarn) {
             RecordLog.warn("[SentinelStatusChecker] WARN: Amount of context exceeds the threshold "
-                + Constants.MAX_CONTEXT_NAME_SIZE + ". Entries in new contexts will NOT take effect!");
+                    + Constants.MAX_CONTEXT_NAME_SIZE + ". Entries in new contexts will NOT take effect!");
             shouldWarn = false;
         }
     }

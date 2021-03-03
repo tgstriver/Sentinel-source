@@ -22,7 +22,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author Eric Zhao
+ * 通过该注解可以设置InitFunc的执行顺序
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})

@@ -15,12 +15,11 @@
  */
 package com.alibaba.csp.sentinel.slotchain;
 
-import java.lang.reflect.Method;
-
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.ResourceTypeConstants;
-import com.alibaba.csp.sentinel.util.IdUtil;
 import com.alibaba.csp.sentinel.util.MethodUtil;
+
+import java.lang.reflect.Method;
 
 /**
  * Resource wrapper for method invocation.
@@ -52,9 +51,9 @@ public class MethodResourceWrapper extends ResourceWrapper {
     @Override
     public String toString() {
         return "MethodResourceWrapper{" +
-            "name='" + name + '\'' +
-            ", entryType=" + entryType +
-            ", resourceType=" + resourceType +
-            '}';
+                "name='" + name + '\'' +
+                ", entryType=" + entryType +
+                ", resourceType=" + resourceType +
+                '}';
     }
 }

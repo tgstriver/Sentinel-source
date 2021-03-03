@@ -32,7 +32,7 @@ public class DegradeSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
 
     @Override
     public void entry(Context context, ResourceWrapper resourceWrapper, DefaultNode node, int count, boolean prioritized, Object... args)
-        throws Throwable {
+            throws Throwable {
         DegradeRuleManager.checkDegrade(resourceWrapper, context, node, count);
         fireEntry(context, resourceWrapper, node, count, prioritized, args);
     }
