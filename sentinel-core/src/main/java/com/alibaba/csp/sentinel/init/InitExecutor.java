@@ -15,13 +15,13 @@
  */
 package com.alibaba.csp.sentinel.init;
 
+import com.alibaba.csp.sentinel.log.RecordLog;
+import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import com.alibaba.csp.sentinel.log.RecordLog;
-import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
 
 /**
  * Load registered init functions and execute in order.
@@ -30,7 +30,7 @@ import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
  */
 public final class InitExecutor {
 
-    private static AtomicBoolean initialized = new AtomicBoolean(false);
+    private static final AtomicBoolean initialized = new AtomicBoolean(false);
 
     /**
      * If one {@link InitFunc} throws an exception, the init process
@@ -42,13 +42,15 @@ public final class InitExecutor {
         if (!initialized.compareAndSet(false, true)) {
             return;
         }
+
         try {
             ServiceLoader<InitFunc> loader = ServiceLoaderUtil.getServiceLoader(InitFunc.class);
-            List<OrderWrapper> initList = new ArrayList<OrderWrapper>();
+            List<OrderWrapper> initList = new ArrayList<>();
             for (InitFunc initFunc : loader) {
                 RecordLog.info("[InitExecutor] Found init func: " + initFunc.getClass().getCanonicalName());
                 insertSorted(initList, initFunc);
             }
+
             for (OrderWrapper w : initList) {
                 w.func.init();
                 RecordLog.info(String.format("[InitExecutor] Executing %s with order %d",

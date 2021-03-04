@@ -15,10 +15,11 @@
  */
 package com.alibaba.csp.sentinel.dashboard;
 
+import com.alibaba.csp.sentinel.dashboard.rule.nacos.NacosConfigProperties;
 import com.alibaba.csp.sentinel.init.InitExecutor;
-
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * Sentinel dashboard application.
@@ -26,6 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Carpenter Lee
  */
 @SpringBootApplication
+@EnableConfigurationProperties(NacosConfigProperties.class)
 public class DashboardApplication {
 
     public static void main(String[] args) {
@@ -34,6 +36,6 @@ public class DashboardApplication {
     }
 
     private static void triggerSentinelInit() {
-        new Thread(() -> InitExecutor.doInit()).start();
+        new Thread(InitExecutor::doInit).start();
     }
 }
