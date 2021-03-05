@@ -2,6 +2,8 @@ package com.alibaba.csp.sentinel.dashboard.rule.nacos;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.concurrent.TimeUnit;
+
 @ConfigurationProperties(prefix = NacosConfigProperties.PREFIX)
 public class NacosConfigProperties {
 
@@ -15,12 +17,12 @@ public class NacosConfigProperties {
     /**
      * the nacos authentication username.
      */
-    private String username;
+    private String username = "";
 
     /**
      * the nacos authentication password.
      */
-    private String password;
+    private String password = "";
 
     /**
      * nacos config group, group is config data meta info.
@@ -30,17 +32,22 @@ public class NacosConfigProperties {
     /**
      * namespace, separation configuration of different environments.
      */
-    private String namespace;
+    private String namespace = "public";
 
     /**
      * access key for namespace.
      */
-    private String accessKey;
+    private String accessKey = "";
 
     /**
      * secret key for namespace.
      */
-    private String secretKey;
+    private String secretKey = "";
+
+    /**
+     * 从nacos中拉取规则配置的超时时间，单位秒
+     */
+    private long obtainConfigTimeout = TimeUnit.SECONDS.toMillis(3);
 
     public String getServerAddr() {
         return serverAddr;
@@ -96,5 +103,13 @@ public class NacosConfigProperties {
 
     public void setSecretKey(String secretKey) {
         this.secretKey = secretKey;
+    }
+
+    public long getObtainConfigTimeout() {
+        return obtainConfigTimeout;
+    }
+
+    public void setObtainConfigTimeout(long obtainConfigTimeout) {
+        this.obtainConfigTimeout = obtainConfigTimeout;
     }
 }

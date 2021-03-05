@@ -70,6 +70,7 @@ public class FlowControllerV2 {
         if (StringUtil.isEmpty(app)) {
             return Result.ofFail(-1, "app can't be null or empty");
         }
+
         try {
             List<FlowRuleEntity> rules = ruleProvider.getRules(app);
             if (rules != null && !rules.isEmpty()) {
@@ -140,6 +141,7 @@ public class FlowControllerV2 {
         if (checkResult != null) {
             return checkResult;
         }
+
         entity.setId(null);
         Date date = new Date();
         entity.setGmtCreate(date);
@@ -148,7 +150,7 @@ public class FlowControllerV2 {
         entity.setResource(entity.getResource().trim());
         try {
             entity = repository.save(entity);
-            publishRules(entity.getApp());
+            this.publishRules(entity.getApp());
         } catch (Throwable throwable) {
             logger.error("Failed to add flow rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -158,16 +160,17 @@ public class FlowControllerV2 {
 
     @PutMapping("/rule/{id}")
     @AuthAction(AuthService.PrivilegeType.WRITE_RULE)
-
     public Result<FlowRuleEntity> apiUpdateFlowRule(@PathVariable("id") Long id,
                                                     @RequestBody FlowRuleEntity entity) {
         if (id == null || id <= 0) {
             return Result.ofFail(-1, "Invalid id");
         }
+
         FlowRuleEntity oldEntity = repository.findById(id);
         if (oldEntity == null) {
             return Result.ofFail(-1, "id " + id + " does not exist");
         }
+
         if (entity == null) {
             return Result.ofFail(-1, "invalid body");
         }
@@ -184,12 +187,14 @@ public class FlowControllerV2 {
         Date date = new Date();
         entity.setGmtCreate(oldEntity.getGmtCreate());
         entity.setGmtModified(date);
+
         try {
             entity = repository.save(entity);
             if (entity == null) {
                 return Result.ofFail(-1, "save entity fail");
             }
-            publishRules(oldEntity.getApp());
+
+            this.publishRules(oldEntity.getApp());
         } catch (Throwable throwable) {
             logger.error("Failed to update flow rule", throwable);
             return Result.ofThrowable(-1, throwable);
@@ -203,6 +208,7 @@ public class FlowControllerV2 {
         if (id == null || id <= 0) {
             return Result.ofFail(-1, "Invalid id");
         }
+
         FlowRuleEntity oldEntity = repository.findById(id);
         if (oldEntity == null) {
             return Result.ofSuccess(null);
@@ -210,14 +216,14 @@ public class FlowControllerV2 {
 
         try {
             repository.delete(id);
-            publishRules(oldEntity.getApp());
+            this.publishRules(oldEntity.getApp());
         } catch (Exception e) {
             return Result.ofFail(-1, e.getMessage());
         }
         return Result.ofSuccess(id);
     }
 
-    private void publishRules(/*@NonNull*/ String app) throws Exception {
+    private void publishRules(String app) throws Exception {
         List<FlowRuleEntity> rules = repository.findAllByApp(app);
         rulePublisher.publish(app, rules);
     }

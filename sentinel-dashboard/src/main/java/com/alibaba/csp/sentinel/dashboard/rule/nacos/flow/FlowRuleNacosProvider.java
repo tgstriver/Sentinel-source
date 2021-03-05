@@ -2,6 +2,7 @@ package com.alibaba.csp.sentinel.dashboard.rule.nacos.flow;
 
 import com.alibaba.csp.sentinel.dashboard.datasource.entity.rule.FlowRuleEntity;
 import com.alibaba.csp.sentinel.dashboard.rule.DynamicRuleProvider;
+import com.alibaba.csp.sentinel.dashboard.rule.nacos.NacosConfigProperties;
 import com.alibaba.csp.sentinel.dashboard.rule.nacos.NacosConfigUtil;
 import com.alibaba.csp.sentinel.datasource.Converter;
 import com.alibaba.csp.sentinel.util.StringUtil;
@@ -18,7 +19,6 @@ import java.util.List;
  * 从配置中心读取配置的流控规则
  */
 @Component
-
 public class FlowRuleNacosProvider implements DynamicRuleProvider<List<FlowRuleEntity>> {
 
     public static final Logger log = LoggerFactory.getLogger(FlowRuleNacosProvider.class);
@@ -28,6 +28,9 @@ public class FlowRuleNacosProvider implements DynamicRuleProvider<List<FlowRuleE
 
     @Autowired
     private Converter<String, List<FlowRuleEntity>> converter;
+
+    @Autowired
+    private NacosConfigProperties properties;
 
     /**
      * 1）通过ConfigService的getConfig()方法从Nacos Config Server读取指定配置信息
@@ -39,9 +42,9 @@ public class FlowRuleNacosProvider implements DynamicRuleProvider<List<FlowRuleE
      */
     @Override
     public List<FlowRuleEntity> getRules(String appName) throws Exception {
-        String rules = configService.getConfig(appName + NacosConfigUtil.FLOW_DATA_ID_POSTFIX,
-                NacosConfigUtil.GROUP_ID, 3000);
-        log.info("obtain flow rules from nacos config:{}", rules);
+        String rules = configService.getConfig(appName + NacosConfigUtil.FLOW_DATA_ID_POSTFIX, NacosConfigUtil.GROUP_ID, properties.getObtainConfigTimeout());
+        log.info("sentinel dashboard obtain flow rules from nacos config:{}", rules);
+
         if (StringUtil.isEmpty(rules)) {
             return new ArrayList<>();
         }
