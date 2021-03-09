@@ -84,6 +84,7 @@ public class StatisticNodeTest {
         for (int i = 0; i < taskCount; i++) {
             bizTasks.add(new BizTask(node, taskBizExecuteCount));
         }
+
         try {
             bizEs.invokeAll(bizTasks);
         } catch (InterruptedException e) {

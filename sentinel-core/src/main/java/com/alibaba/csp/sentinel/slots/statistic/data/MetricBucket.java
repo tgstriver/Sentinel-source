@@ -20,10 +20,7 @@ import com.alibaba.csp.sentinel.slots.statistic.MetricEvent;
 import com.alibaba.csp.sentinel.slots.statistic.base.LongAdder;
 
 /**
- * Represents metrics data in a period of time span.
- *
- * @author jialiang.linjl
- * @author Eric Zhao
+ * 表示一段时间跨度内的指标数据
  */
 public class MetricBucket {
 
@@ -37,7 +34,8 @@ public class MetricBucket {
         for (MetricEvent event : events) {
             counters[event.ordinal()] = new LongAdder();
         }
-        initMinRt();
+
+        this.initMinRt();
     }
 
     public MetricBucket reset(MetricBucket bucket) {
@@ -45,7 +43,8 @@ public class MetricBucket {
             counters[event.ordinal()].reset();
             counters[event.ordinal()].add(bucket.get(event));
         }
-        initMinRt();
+
+        this.initMinRt();
         return this;
     }
 
@@ -76,7 +75,7 @@ public class MetricBucket {
     }
 
     public long pass() {
-        return get(MetricEvent.PASS);
+        return this.get(MetricEvent.PASS);
     }
 
     public long occupiedPass() {
@@ -104,7 +103,7 @@ public class MetricBucket {
     }
 
     public void addPass(int n) {
-        add(MetricEvent.PASS, n);
+        this.add(MetricEvent.PASS, n);
     }
 
     public void addOccupiedPass(int n) {
@@ -116,7 +115,7 @@ public class MetricBucket {
     }
 
     public void addBlock(int n) {
-        add(MetricEvent.BLOCK, n);
+        this.add(MetricEvent.BLOCK, n);
     }
 
     public void addSuccess(int n) {

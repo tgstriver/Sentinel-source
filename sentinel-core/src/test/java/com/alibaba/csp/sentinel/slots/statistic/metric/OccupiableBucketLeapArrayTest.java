@@ -1,15 +1,13 @@
 package com.alibaba.csp.sentinel.slots.statistic.metric;
 
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import com.alibaba.csp.sentinel.slots.statistic.base.WindowWrap;
 import com.alibaba.csp.sentinel.slots.statistic.data.MetricBucket;
 import com.alibaba.csp.sentinel.slots.statistic.metric.occupy.OccupiableBucketLeapArray;
 import com.alibaba.csp.sentinel.test.AbstractTimeBasedTest;
-import com.alibaba.csp.sentinel.util.TimeUtil;
-
 import org.junit.Test;
+
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,7 +31,7 @@ public class OccupiableBucketLeapArrayTest extends AbstractTimeBasedTest {
 
         WindowWrap<MetricBucket> currentWindow = leapArray.currentWindow(currentTime);
         currentWindow.value().addPass(1);
-        assertEquals(currentWindow.value().pass(), 1L);
+        assertEquals(currentWindow.value().pass(), 1);
 
         leapArray.addWaiting(currentTime + windowLengthInMs, 1);
         assertEquals(leapArray.currentWaiting(), 1);
@@ -117,8 +115,7 @@ public class OccupiableBucketLeapArrayTest extends AbstractTimeBasedTest {
         }
 
         System.out.println(currentTime + intervalInSec * 1000);
-        List<MetricBucket> values = leapArray
-            .values(currentTime - currentTime % windowLengthInMs + intervalInSec * 1000);
+        List<MetricBucket> values = leapArray.values(currentTime - currentTime % windowLengthInMs + intervalInSec * 1000);
         leapArray.debug(currentTime + intervalInSec * 1000);
         assertEquals(values.size(), intervalInSec * 1000 / windowLengthInMs);
 

@@ -15,16 +15,16 @@
  */
 package com.alibaba.csp.sentinel.node;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.node.metric.MetricNode;
 import com.alibaba.csp.sentinel.slots.statistic.metric.DebugSupport;
 import com.alibaba.csp.sentinel.util.function.Predicate;
 
+import java.util.List;
+import java.util.Map;
+
 /**
- * Holds real-time statistics for resources.
+ * 保存资源的实时统计信息
  *
  * @author qinan.qn
  * @author leyou
@@ -33,7 +33,7 @@ import com.alibaba.csp.sentinel.util.function.Predicate;
 public interface Node extends OccupySupport, DebugSupport {
 
     /**
-     * Get incoming request per minute ({@code pass + block}).
+     * 获取每分钟进入的请求数({@code pass + block})
      *
      * @return total request count per minute
      */
@@ -97,7 +97,7 @@ public interface Node extends OccupySupport, DebugSupport {
     double successQps();
 
     /**
-     * Get estimated max success QPS till now.
+     * 获取到现在最大的成功QPS的估计值
      *
      * @return max completed QPS
      */

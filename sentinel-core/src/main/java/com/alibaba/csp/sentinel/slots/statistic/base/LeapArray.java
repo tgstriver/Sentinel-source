@@ -52,9 +52,9 @@ public abstract class LeapArray<T> {
     private final ReentrantLock updateLock = new ReentrantLock();
 
     /**
-     * 总桶数为: {@code sampleCount = intervalInMs / windowLengthInMs}.
+     * 将时间分割后的总的窗口数为: {@code sampleCount = intervalInMs / windowLengthInMs}.
      *
-     * @param sampleCount  滑动窗口的桶数量
+     * @param sampleCount  滑动窗口的窗口数量
      * @param intervalInMs the total time interval of this {@link LeapArray} in milliseconds
      */
     public LeapArray(int sampleCount, int intervalInMs) {
@@ -118,7 +118,7 @@ public abstract class LeapArray<T> {
     }
 
     /**
-     * Get bucket item at provided timestamp.
+     * 根据提供的时间戳获取它位于分桶后的哪个桶里面，即提供的时间戳位于哪个时间区间，这里使用到了模板方法模式
      *
      * @param timeMillis a valid timestamp in milliseconds
      * @return current bucket item at provided timestamp if the time is valid; null if time is invalid
@@ -154,7 +154,7 @@ public abstract class LeapArray<T> {
                  * then try to update circular array via a CAS operation. Only one thread can
                  * succeed to update, while other threads yield its time slice.
                  */
-                WindowWrap<T> window = new WindowWrap<>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
+                WindowWrap<T> window = new WindowWrap<>(windowLengthInMs, windowStart, this.newEmptyBucket(timeMillis));
                 if (array.compareAndSet(idx, null, window)) {
                     // Successfully updated, return the created bucket.
                     return window;

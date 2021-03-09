@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Metrics data for a specific resource at given {@code timestamp}.
+ * 用来存放特定资源在给定{@code timestamp}时的指标数据
  *
  * @author jialiang.linjl
  * @author Carpenter Lee
@@ -28,8 +28,10 @@ import java.util.Date;
 public class MetricNode {
 
     private String resource;
+
     /**
-     * Resource classification (e.g. SQL or RPC)
+     * 资源分类(例如SQL或RPC)
+     *
      * @since 1.7.0
      */
     private int classification;
@@ -135,17 +137,17 @@ public class MetricNode {
     @Override
     public String toString() {
         return "MetricNode{" +
-            "resource='" + resource + '\'' +
-            ", classification=" + classification +
-            ", timestamp=" + timestamp +
-            ", passQps=" + passQps +
-            ", blockQps=" + blockQps +
-            ", successQps=" + successQps +
-            ", exceptionQps=" + exceptionQps +
-            ", rt=" + rt +
-            ", concurrency=" + concurrency +
-            ", occupiedPassQps=" + occupiedPassQps +
-            '}';
+                "resource='" + resource + '\'' +
+                ", classification=" + classification +
+                ", timestamp=" + timestamp +
+                ", passQps=" + passQps +
+                ", blockQps=" + blockQps +
+                ", successQps=" + successQps +
+                ", exceptionQps=" + exceptionQps +
+                ", rt=" + rt +
+                ", concurrency=" + concurrency +
+                ", occupiedPassQps=" + occupiedPassQps +
+                '}';
     }
 
     /**
@@ -189,6 +191,7 @@ public class MetricNode {
         node.setSuccessQps(Long.parseLong(strs[4]));
         node.setExceptionQps(Long.parseLong(strs[5]));
         node.setRt(Long.parseLong(strs[6]));
+
         if (strs.length >= 8) {
             node.setOccupiedPassQps(Long.parseLong(strs[7]));
         }
@@ -214,16 +217,16 @@ public class MetricNode {
         DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         StringBuilder sb = new StringBuilder(32);
         sb.delete(0, sb.length());
-        sb.append(getTimestamp()).append("|");
-        sb.append(df.format(new Date(getTimestamp()))).append("|");
-        String legalName = getResource().replaceAll("\\|", "_");
+        sb.append(this.getTimestamp()).append("|");
+        sb.append(df.format(new Date(this.getTimestamp()))).append("|");
+        String legalName = this.getResource().replaceAll("\\|", "_");
         sb.append(legalName).append("|");
-        sb.append(getPassQps()).append("|");
-        sb.append(getBlockQps()).append("|");
-        sb.append(getSuccessQps()).append("|");
-        sb.append(getExceptionQps()).append("|");
-        sb.append(getRt()).append("|");
-        sb.append(getOccupiedPassQps()).append("|");
+        sb.append(this.getPassQps()).append("|");
+        sb.append(this.getBlockQps()).append("|");
+        sb.append(this.getSuccessQps()).append("|");
+        sb.append(this.getExceptionQps()).append("|");
+        sb.append(this.getRt()).append("|");
+        sb.append(this.getOccupiedPassQps()).append("|");
         sb.append(concurrency).append("|");
         sb.append(classification);
         sb.append('\n');
@@ -247,6 +250,7 @@ public class MetricNode {
         node.setSuccessQps(Long.parseLong(strs[5]));
         node.setExceptionQps(Long.parseLong(strs[6]));
         node.setRt(Long.parseLong(strs[7]));
+
         if (strs.length >= 9) {
             node.setOccupiedPassQps(Long.parseLong(strs[8]));
         }

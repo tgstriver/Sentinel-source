@@ -34,7 +34,7 @@ public class MetricEntryCallback implements ProcessorSlotEntryCallback<DefaultNo
 
     @Override
     public void onPass(Context context, ResourceWrapper rw, DefaultNode param, int count, Object... args)
-        throws Exception {
+            throws Exception {
         for (MetricExtension m : MetricExtensionProvider.getMetricExtensions()) {
             if (m instanceof AdvancedMetricExtension) {
                 ((AdvancedMetricExtension) m).onPass(rw, count, args);
