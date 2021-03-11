@@ -24,6 +24,10 @@ import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.context.Context;
 
 /**
+ * Entry是Sentinel中用来表示是否通过限流的一个凭证，就像一个token一样。每次执行SphU.entry()或SphO.entry()都会返回一个Entry给调用者，意思就是告诉调用者，
+ * 如果正确返回了Entry给你，那表示你可以正常访问被Sentinel保护的后方服务了，否则Sentinel会抛出一个BlockException(如果是SphO.entry()会返回false)，
+ * 这就表示调用者想要访问的服务被保护了，也就是说调用者本身被限流了
+ * <p>
  * Each {@link SphU}#entry() will return an {@link Entry}. This class holds information of current invocation:<br/>
  *
  * <ul>
@@ -55,7 +59,7 @@ public abstract class Entry implements AutoCloseable {
 
     private static final Object[] OBJECTS0 = new Object[0];
 
-    private final long createTimestamp;
+    private final long createTimestamp; // 当前Entry的创建时间，主要用来后期计算rt
     private long completeTimestamp;
 
     private Node curNode;
@@ -67,7 +71,7 @@ public abstract class Entry implements AutoCloseable {
     private Throwable error;
     private BlockException blockError;
 
-    protected final ResourceWrapper resourceWrapper;
+    protected final ResourceWrapper resourceWrapper; // 当前Entry所关联的资源
 
     public Entry(ResourceWrapper resourceWrapper) {
         this.resourceWrapper = resourceWrapper;
@@ -105,7 +109,7 @@ public abstract class Entry implements AutoCloseable {
      * Exit this entry. This method should invoke if and only if once at the end of the resource protection.
      *
      * @param count tokens to release.
-     * @param args extra parameters
+     * @param args  extra parameters
      * @throws ErrorEntryFreeException, if {@link Context#getCurEntry()} is not this entry.
      */
     public abstract void exit(int count, Object... args) throws ErrorEntryFreeException;
@@ -114,7 +118,7 @@ public abstract class Entry implements AutoCloseable {
      * Exit this entry.
      *
      * @param count tokens to release.
-     * @param args extra parameters
+     * @param args  extra parameters
      * @return next available entry after exit, that is the parent entry.
      * @throws ErrorEntryFreeException, if {@link Context#getCurEntry()} is not this entry.
      */
@@ -183,10 +187,10 @@ public abstract class Entry implements AutoCloseable {
      * Like {@code CompletableFuture} since JDK 8, it guarantees specified handler
      * is invoked when this entry terminated (exited), no matter it's blocked or permitted.
      * Use it when you did some STATEFUL operations on entries.
-     * 
+     *
      * @param handler handler function on the invocation terminates
      * @since 1.8.0
      */
     public abstract void whenTerminate(BiConsumer<Context, Entry> handler);
-    
+
 }

@@ -15,6 +15,15 @@
  */
 package com.alibaba.csp.sentinel.transport.command;
 
+import com.alibaba.csp.sentinel.command.CommandHandler;
+import com.alibaba.csp.sentinel.command.CommandHandlerProvider;
+import com.alibaba.csp.sentinel.concurrent.NamedThreadFactory;
+import com.alibaba.csp.sentinel.transport.CommandCenter;
+import com.alibaba.csp.sentinel.transport.command.http.HttpEventTask;
+import com.alibaba.csp.sentinel.transport.config.TransportConfig;
+import com.alibaba.csp.sentinel.transport.log.CommandCenterLog;
+import com.alibaba.csp.sentinel.util.StringUtil;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -31,15 +40,6 @@ import java.util.concurrent.RejectedExecutionHandler;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import com.alibaba.csp.sentinel.command.CommandHandler;
-import com.alibaba.csp.sentinel.command.CommandHandlerProvider;
-import com.alibaba.csp.sentinel.concurrent.NamedThreadFactory;
-import com.alibaba.csp.sentinel.transport.log.CommandCenterLog;
-import com.alibaba.csp.sentinel.transport.CommandCenter;
-import com.alibaba.csp.sentinel.transport.command.http.HttpEventTask;
-import com.alibaba.csp.sentinel.transport.config.TransportConfig;
-import com.alibaba.csp.sentinel.util.StringUtil;
-
 /***
  * The simple command center provides service to exchange information.
  *
@@ -52,8 +52,11 @@ public class SimpleHttpCommandCenter implements CommandCenter {
     private static final int DEFAULT_SERVER_SO_TIMEOUT = 3000;
     private static final int DEFAULT_PORT = 8719;
 
+    /**
+     * key为CommandHandler的名称，即在CommandHandler实现类上添加的@CommandMapping注解
+     */
     @SuppressWarnings("rawtypes")
-    private static final Map<String, CommandHandler> handlerMap = new ConcurrentHashMap<String, CommandHandler>();
+    private static final Map<String, CommandHandler> handlerMap = new ConcurrentHashMap<>();
 
     @SuppressWarnings("PMD.ThreadPoolCreationRule")
     private ExecutorService executor = Executors.newSingleThreadExecutor(

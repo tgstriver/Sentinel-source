@@ -15,8 +15,6 @@
  */
 package com.alibaba.csp.sentinel;
 
-import java.util.LinkedList;
-
 import com.alibaba.csp.sentinel.context.Context;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.context.NullContext;
@@ -25,6 +23,8 @@ import com.alibaba.csp.sentinel.node.Node;
 import com.alibaba.csp.sentinel.slotchain.ProcessorSlot;
 import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.util.function.BiConsumer;
+
+import java.util.LinkedList;
 
 /**
  * Linked entry within current context.
@@ -54,10 +54,13 @@ class CtEntry extends Entry {
         if (context instanceof NullContext) {
             return;
         }
+        // 获取「上下文」中上一次的入口
         this.parent = context.getCurEntry();
         if (parent != null) {
+            // 然后将当前入口设置为上一次入口的子节点
             ((CtEntry) parent).child = this;
         }
+        // 设置「上下文」的当前入口为该类本身
         context.setCurEntry(this);
     }
 

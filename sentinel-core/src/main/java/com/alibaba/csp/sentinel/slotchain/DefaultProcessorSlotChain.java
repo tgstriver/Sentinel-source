@@ -61,7 +61,7 @@ public class DefaultProcessorSlotChain extends ProcessorSlotChain {
      */
     @Override
     public void setNext(AbstractLinkedProcessorSlot<?> next) {
-        addLast(next);
+        this.addLast(next);
     }
 
     @Override

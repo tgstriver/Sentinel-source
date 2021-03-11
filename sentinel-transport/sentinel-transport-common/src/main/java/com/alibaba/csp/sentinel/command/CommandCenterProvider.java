@@ -41,7 +41,7 @@ public final class CommandCenterProvider {
         } else {
             commandCenter = resolveCommandCenter;
             RecordLog.info("[CommandCenterProvider] CommandCenter resolved: " + resolveCommandCenter.getClass()
-                .getCanonicalName());
+                    .getCanonicalName());
         }
     }
 
@@ -54,5 +54,6 @@ public final class CommandCenterProvider {
         return commandCenter;
     }
 
-    private CommandCenterProvider() {}
+    private CommandCenterProvider() {
+    }
 }

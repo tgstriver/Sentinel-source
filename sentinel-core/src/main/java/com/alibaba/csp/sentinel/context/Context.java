@@ -24,7 +24,7 @@ import com.alibaba.csp.sentinel.node.Node;
 import com.alibaba.csp.sentinel.slots.nodeselector.NodeSelectorSlot;
 
 /**
- * This class holds metadata of current invocation:<br/>
+ * context中维护着当前调用链的元数据
  *
  * <ul>
  * <li>the {@link EntranceNode}: the root of the current invocation
@@ -62,17 +62,17 @@ public class Context {
     private final String name;
 
     /**
-     * The entrance node of current invocation tree.
+     * 当前调用链的入口节点
      */
     private DefaultNode entranceNode;
 
     /**
-     * Current processing entry.
+     * 当前调用链的当前entry
      */
     private Entry curEntry;
 
     /**
-     * The origin of this context (usually indicate different invokers, e.g. service consumer name or origin IP).
+     * 当前调用链的调用源 (usually indicate different invokers, e.g. service consumer name or origin IP).
      */
     private String origin = "";
 
@@ -177,6 +177,9 @@ public class Context {
      * @return the parent node of the current.
      */
     public Node getLastNode() {
+        // 如果curEntry不存在时，返回entranceNode,否则返回curEntry的lastNode，
+        // 需要注意的是curEntry的lastNode是获取的parent的curNode，
+        // 如果每次进入的资源不同，就会每次都创建一个CtEntry，则parent为null，所以curEntry.getLastNode()也为null
         if (curEntry != null && curEntry.getLastNode() != null) {
             return curEntry.getLastNode();
         } else {

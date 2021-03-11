@@ -15,14 +15,14 @@
  */
 package com.alibaba.csp.sentinel.command;
 
+import com.alibaba.csp.sentinel.command.annotation.CommandMapping;
+import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
+import com.alibaba.csp.sentinel.util.StringUtil;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.ServiceLoader;
-
-import com.alibaba.csp.sentinel.command.annotation.CommandMapping;
-import com.alibaba.csp.sentinel.spi.ServiceLoaderUtil;
-import com.alibaba.csp.sentinel.util.StringUtil;
 
 /**
  * Provides and filters command handlers registered via SPI.
@@ -32,7 +32,7 @@ import com.alibaba.csp.sentinel.util.StringUtil;
 public class CommandHandlerProvider implements Iterable<CommandHandler> {
 
     private final ServiceLoader<CommandHandler> serviceLoader = ServiceLoaderUtil.getServiceLoader(
-        CommandHandler.class);
+            CommandHandler.class);
 
     /**
      * Get all command handlers annotated with {@link CommandMapping} with command name.

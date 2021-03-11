@@ -37,7 +37,7 @@ public abstract class AbstractLinkedProcessorSlot<T> implements ProcessorSlot<T>
     void transformEntry(Context context, ResourceWrapper resourceWrapper, Object o, int count, boolean prioritized, Object... args)
         throws Throwable {
         T t = (T)o;
-        entry(context, resourceWrapper, t, count, prioritized, args);
+        this.entry(context, resourceWrapper, t, count, prioritized, args);
     }
 
     @Override

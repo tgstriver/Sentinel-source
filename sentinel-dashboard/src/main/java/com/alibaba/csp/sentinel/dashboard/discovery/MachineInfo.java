@@ -1,25 +1,13 @@
-/*
- * Copyright 1999-2018 Alibaba Group Holding Ltd.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.alibaba.csp.sentinel.dashboard.discovery;
-
-import java.util.Objects;
 
 import com.alibaba.csp.sentinel.dashboard.config.DashboardConfig;
 import com.alibaba.csp.sentinel.util.StringUtil;
 
+import java.util.Objects;
+
+/**
+ * 每个客户端会对应一条记录信息
+ */
 public class MachineInfo implements Comparable<MachineInfo> {
 
     private String app = "";
@@ -27,7 +15,7 @@ public class MachineInfo implements Comparable<MachineInfo> {
     private String hostname = "";
     private String ip = "";
     private Integer port = -1;
-    private long lastHeartbeat;
+    private long lastHeartbeat; // 客户端最后一次发送心跳的时间戳
     private long heartbeatVersion;
 
     /**
@@ -90,7 +78,7 @@ public class MachineInfo implements Comparable<MachineInfo> {
     public long getHeartbeatVersion() {
         return heartbeatVersion;
     }
-    
+
     public void setHeartbeatVersion(long heartbeatVersion) {
         this.heartbeatVersion = heartbeatVersion;
     }
@@ -103,15 +91,31 @@ public class MachineInfo implements Comparable<MachineInfo> {
         this.version = version;
         return this;
     }
-    
+
+    /**
+     * 判断客户端是否是健康的，即如果客户端最后一次心跳的时间和当前时间的差值在指定的时间以内，那么是健康的
+     * <p>
+     * 1. 设置了-Dsentinel.dashboard.unhealthyMachineMillis系统属性
+     * *****1.1 设置的值大于30000，那么DashboardConfig.getUnhealthyMachineMillis()=-Dsentinel.dashboard.unhealthyMachineMillis
+     * *****1.2 设置的值小于30000，那么DashboardConfig.getUnhealthyMachineMillis()=30000
+     * 2. 没有设置-Dsentinel.dashboard.unhealthyMachineMillis系统属性，那么DashboardConfig.getUnhealthyMachineMillis()=60000，即60秒
+     *
+     * @return
+     */
     public boolean isHealthy() {
         long delta = System.currentTimeMillis() - lastHeartbeat;
         return delta < DashboardConfig.getUnhealthyMachineMillis();
     }
-    
+
     /**
-     * whether dead should be removed
-     * 
+     * 是否应该删除已经挂掉的客户端，当设置了-Dsentinel.dashboard.autoRemoveMachineMillis系统属性时，则会判断客户端最后一次
+     * 心跳的时间和当前时间的差值，如果差值超过了指定的时间，则会从注册中心剔除该客户端
+     * <p>
+     * 1. 设置了-Dsentinel.dashboard.autoRemoveMachineMillis系统属性
+     * *****1.1 设置的值小于300000，那么DashboardConfig.getAutoRemoveMachineMillis()=300000
+     * *****1.2 设置的值大于300000，那么DashboardConfig.getAutoRemoveMachineMillis()=-Dsentinel.dashboard.autoRemoveMachineMillis
+     * 2. 没有设置-Dsentinel.dashboard.autoRemoveMachineMillis系统属性，那么DashboardConfig.getAutoRemoveMachineMillis()=0
+     *
      * @return
      */
     public boolean isDead() {
@@ -121,11 +125,11 @@ public class MachineInfo implements Comparable<MachineInfo> {
         }
         return false;
     }
-    
+
     public long getLastHeartbeat() {
         return lastHeartbeat;
     }
-    
+
     public void setLastHeartbeat(long lastHeartbeat) {
         this.lastHeartbeat = lastHeartbeat;
     }
@@ -135,9 +139,11 @@ public class MachineInfo implements Comparable<MachineInfo> {
         if (this == o) {
             return 0;
         }
+
         if (!port.equals(o.getPort())) {
             return port.compareTo(o.getPort());
         }
+
         if (!StringUtil.equals(app, o.getApp())) {
             return app.compareToIgnoreCase(o.getApp());
         }
@@ -147,26 +153,30 @@ public class MachineInfo implements Comparable<MachineInfo> {
     @Override
     public String toString() {
         return new StringBuilder("MachineInfo {")
-            .append("app='").append(app).append('\'')
-            .append(",appType='").append(appType).append('\'')
-            .append(", hostname='").append(hostname).append('\'')
-            .append(", ip='").append(ip).append('\'')
-            .append(", port=").append(port)
-            .append(", heartbeatVersion=").append(heartbeatVersion)
-            .append(", lastHeartbeat=").append(lastHeartbeat)
-            .append(", version='").append(version).append('\'')
-            .append(", healthy=").append(isHealthy())
-            .append('}').toString();
+                .append("app='").append(app).append('\'')
+                .append(",appType='").append(appType).append('\'')
+                .append(", hostname='").append(hostname).append('\'')
+                .append(", ip='").append(ip).append('\'')
+                .append(", port=").append(port)
+                .append(", heartbeatVersion=").append(heartbeatVersion)
+                .append(", lastHeartbeat=").append(lastHeartbeat)
+                .append(", version='").append(version).append('\'')
+                .append(", healthy=").append(isHealthy())
+                .append('}').toString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (!(o instanceof MachineInfo)) { return false; }
-        MachineInfo that = (MachineInfo)o;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof MachineInfo)) {
+            return false;
+        }
+        MachineInfo that = (MachineInfo) o;
         return Objects.equals(app, that.app) &&
-            Objects.equals(ip, that.ip) &&
-            Objects.equals(port, that.port);
+                Objects.equals(ip, that.ip) &&
+                Objects.equals(port, that.port);
     }
 
     @Override

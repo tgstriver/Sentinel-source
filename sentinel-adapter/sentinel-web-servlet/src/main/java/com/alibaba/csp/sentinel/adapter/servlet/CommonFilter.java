@@ -15,17 +15,6 @@
  */
 package com.alibaba.csp.sentinel.adapter.servlet;
 
-import java.io.IOException;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.ResourceTypeConstants;
@@ -39,6 +28,16 @@ import com.alibaba.csp.sentinel.adapter.servlet.util.FilterUtil;
 import com.alibaba.csp.sentinel.context.ContextUtil;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.util.StringUtil;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Servlet filter that integrates with Sentinel.
@@ -82,6 +81,7 @@ public class CommonFilter implements Filter {
         Entry urlEntry = null;
 
         try {
+            // 根据请求生成的资源
             String target = FilterUtil.filterTarget(sRequest);
             // Clean and unify the URL.
             // For REST APIs, you have to clean the URL (e.g. `/foo/1` and `/foo/2` -> `/foo/:id`), or
@@ -97,6 +97,7 @@ public class CommonFilter implements Filter {
                 // Parse the request origin using registered origin parser.
                 String origin = parseOrigin(sRequest);
                 String contextName = webContextUnify ? WebServletConfig.WEB_SERVLET_CONTEXT_NAME : target;
+                // “申请”该资源
                 ContextUtil.enter(contextName, origin);
 
                 if (httpMethodSpecify) {
@@ -107,8 +108,11 @@ public class CommonFilter implements Filter {
                     urlEntry = SphU.entry(target, ResourceTypeConstants.COMMON_WEB, EntryType.IN);
                 }
             }
+
+            // 如果能成功“申请”到资源，则说明未被限流，则将请求放行
             chain.doFilter(request, response);
         } catch (BlockException e) {
+            // 否则如果捕获了BlockException异常，说明请求被限流了，则将请求重定向到一个默认的页面
             HttpServletResponse sResponse = (HttpServletResponse) response;
             // Return the block page, or redirect to another URL.
             WebCallbackManager.getUrlBlockHandler().blocked(sRequest, sResponse, e);
