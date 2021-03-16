@@ -27,14 +27,18 @@ import com.alibaba.csp.sentinel.slots.block.RuleConstant;
 public class ClusterFlowConfig {
 
     /**
-     * Global unique ID.
+     * （必需）全局唯一的规则ID，由集群限流管控端分配
      */
     private Long flowId;
 
     /**
-     * Threshold type (average by local value or global value).
+     * 阈值模式，默认（0）为单机均摊，1为全局阈值
      */
     private int thresholdType = ClusterRuleConstant.FLOW_THRESHOLD_AVG_LOCAL;
+
+    /**
+     * 当token client和token sever连接失败或通信失败时，是否将client退化到本地的限流模式
+     */
     private boolean fallbackToLocalWhenFail = true;
 
     /**
@@ -104,16 +108,30 @@ public class ClusterFlowConfig {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
-        ClusterFlowConfig that = (ClusterFlowConfig)o;
+        ClusterFlowConfig that = (ClusterFlowConfig) o;
 
-        if (thresholdType != that.thresholdType) { return false; }
-        if (fallbackToLocalWhenFail != that.fallbackToLocalWhenFail) { return false; }
-        if (strategy != that.strategy) { return false; }
-        if (sampleCount != that.sampleCount) { return false; }
-        if (windowIntervalMs != that.windowIntervalMs) { return false; }
+        if (thresholdType != that.thresholdType) {
+            return false;
+        }
+        if (fallbackToLocalWhenFail != that.fallbackToLocalWhenFail) {
+            return false;
+        }
+        if (strategy != that.strategy) {
+            return false;
+        }
+        if (sampleCount != that.sampleCount) {
+            return false;
+        }
+        if (windowIntervalMs != that.windowIntervalMs) {
+            return false;
+        }
         return flowId != null ? flowId.equals(that.flowId) : that.flowId == null;
     }
 
@@ -131,12 +149,12 @@ public class ClusterFlowConfig {
     @Override
     public String toString() {
         return "ClusterFlowConfig{" +
-            "flowId=" + flowId +
-            ", thresholdType=" + thresholdType +
-            ", fallbackToLocalWhenFail=" + fallbackToLocalWhenFail +
-            ", strategy=" + strategy +
-            ", sampleCount=" + sampleCount +
-            ", windowIntervalMs=" + windowIntervalMs +
-            '}';
+                "flowId=" + flowId +
+                ", thresholdType=" + thresholdType +
+                ", fallbackToLocalWhenFail=" + fallbackToLocalWhenFail +
+                ", strategy=" + strategy +
+                ", sampleCount=" + sampleCount +
+                ", windowIntervalMs=" + windowIntervalMs +
+                '}';
     }
 }

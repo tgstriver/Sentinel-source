@@ -32,7 +32,8 @@ public class TokenResult {
 
     private Map<String, String> attachments;
 
-    public TokenResult() {}
+    public TokenResult() {
+    }
 
     public TokenResult(Integer status) {
         this.status = status;
@@ -77,10 +78,10 @@ public class TokenResult {
     @Override
     public String toString() {
         return "TokenResult{" +
-            "status=" + status +
-            ", remaining=" + remaining +
-            ", waitInMs=" + waitInMs +
-            ", attachments=" + attachments +
-            '}';
+                "status=" + status +
+                ", remaining=" + remaining +
+                ", waitInMs=" + waitInMs +
+                ", attachments=" + attachments +
+                '}';
     }
 }

@@ -15,12 +15,12 @@
  */
 package com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker;
 
+import com.alibaba.csp.sentinel.util.AssertUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.alibaba.csp.sentinel.util.AssertUtil;
 
 /**
  * <p>Registry for circuit breaker event observers.</p>
@@ -30,12 +30,15 @@ import com.alibaba.csp.sentinel.util.AssertUtil;
  */
 public class EventObserverRegistry {
 
+    /**
+     * 这里通过map结构来保存所有的观察者
+     */
     private final Map<String, CircuitBreakerStateChangeObserver> stateChangeObserverMap = new HashMap<>();
 
     /**
      * Register a circuit breaker state change observer.
      *
-     * @param name observer name
+     * @param name     observer name
      * @param observer a valid observer
      */
     public void addStateChangeObserver(String name, CircuitBreakerStateChangeObserver observer) {
@@ -58,13 +61,19 @@ public class EventObserverRegistry {
         return new ArrayList<>(stateChangeObserverMap.values());
     }
 
+    /**
+     * 通过静态内部类的方式实现单例
+     *
+     * @return
+     */
     public static EventObserverRegistry getInstance() {
         return InstanceHolder.instance;
     }
 
     private static class InstanceHolder {
-        private static EventObserverRegistry instance = new EventObserverRegistry();
+        private static final EventObserverRegistry instance = new EventObserverRegistry();
     }
 
-    EventObserverRegistry() {}
+    EventObserverRegistry() {
+    }
 }

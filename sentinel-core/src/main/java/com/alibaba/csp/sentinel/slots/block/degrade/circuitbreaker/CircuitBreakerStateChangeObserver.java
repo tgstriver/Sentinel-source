@@ -21,6 +21,7 @@ import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
  * @author Eric Zhao
  * @since 1.8.0
  */
+@FunctionalInterface
 public interface CircuitBreakerStateChangeObserver {
 
     /**

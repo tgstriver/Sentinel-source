@@ -15,6 +15,11 @@
  */
 package com.alibaba.csp.sentinel.slots.statistic.metric;
 
+import com.alibaba.csp.sentinel.slots.block.flow.param.RollingParamEvent;
+import com.alibaba.csp.sentinel.slots.statistic.base.LeapArray;
+import com.alibaba.csp.sentinel.slots.statistic.base.WindowWrap;
+import com.alibaba.csp.sentinel.slots.statistic.data.ParamMapBucket;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -23,11 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import com.alibaba.csp.sentinel.slots.block.flow.param.RollingParamEvent;
-import com.alibaba.csp.sentinel.slots.statistic.base.LeapArray;
-import com.alibaba.csp.sentinel.slots.statistic.base.WindowWrap;
-import com.alibaba.csp.sentinel.slots.statistic.data.ParamMapBucket;
 
 /**
  * The fundamental data structure for frequent parameters statistics in a time window.
@@ -67,7 +67,7 @@ public class HotParameterLeapArray extends LeapArray<ParamMapBucket> {
     /**
      * Get "top-N" value-QPS map of provided event.
      *
-     * @param event target event
+     * @param event  target event
      * @param number max number of values
      * @return "top-N" value map
      */
@@ -109,7 +109,7 @@ public class HotParameterLeapArray extends LeapArray<ParamMapBucket> {
             if (x.getValue() == 0) {
                 break;
             }
-            doubleResult.put(x.getKey(), ((double)x.getValue()) / getIntervalInSecond());
+            doubleResult.put(x.getKey(), ((double) x.getValue()) / getIntervalInSecond());
         }
 
         return doubleResult;

@@ -15,14 +15,6 @@
  */
 package com.alibaba.csp.sentinel.cluster.server.config;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.alibaba.csp.sentinel.cluster.ClusterConstants;
 import com.alibaba.csp.sentinel.cluster.flow.rule.ClusterFlowRuleManager;
 import com.alibaba.csp.sentinel.cluster.flow.rule.ClusterParamFlowRuleManager;
@@ -37,6 +29,14 @@ import com.alibaba.csp.sentinel.property.PropertyListener;
 import com.alibaba.csp.sentinel.property.SentinelProperty;
 import com.alibaba.csp.sentinel.slots.block.flow.FlowRuleUtil;
 import com.alibaba.csp.sentinel.util.AssertUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Eric Zhao
@@ -84,11 +84,11 @@ public final class ClusterServerConfigManager {
     private static SentinelProperty<ServerFlowConfig> globalFlowProperty = new DynamicSentinelProperty<>();
 
     private static final PropertyListener<ServerTransportConfig> TRANSPORT_PROPERTY_LISTENER
-        = new ServerGlobalTransportPropertyListener();
+            = new ServerGlobalTransportPropertyListener();
     private static final PropertyListener<ServerFlowConfig> GLOBAL_FLOW_PROPERTY_LISTENER
-        = new ServerGlobalFlowPropertyListener();
+            = new ServerGlobalFlowPropertyListener();
     private static final PropertyListener<Set<String>> NAMESPACE_SET_PROPERTY_LISTENER
-        = new ServerNamespaceSetPropertyListener();
+            = new ServerNamespaceSetPropertyListener();
 
     static {
         transportConfigProperty.addListener(TRANSPORT_PROPERTY_LISTENER);
@@ -105,8 +105,8 @@ public final class ClusterServerConfigManager {
         AssertUtil.notNull(property, "namespace set dynamic property cannot be null");
         synchronized (NAMESPACE_SET_PROPERTY_LISTENER) {
             RecordLog.info(
-                "[ClusterServerConfigManager] Registering new namespace set dynamic property to Sentinel server "
-                    + "config manager");
+                    "[ClusterServerConfigManager] Registering new namespace set dynamic property to Sentinel server "
+                            + "config manager");
             namespaceSetProperty.removeListener(NAMESPACE_SET_PROPERTY_LISTENER);
             property.addListener(NAMESPACE_SET_PROPERTY_LISTENER);
             namespaceSetProperty = property;
@@ -122,8 +122,8 @@ public final class ClusterServerConfigManager {
         AssertUtil.notNull(property, "cluster server transport config dynamic property cannot be null");
         synchronized (TRANSPORT_PROPERTY_LISTENER) {
             RecordLog.info(
-                "[ClusterServerConfigManager] Registering new server transport dynamic property to Sentinel server "
-                    + "config manager");
+                    "[ClusterServerConfigManager] Registering new server transport dynamic property to Sentinel server "
+                            + "config manager");
             transportConfigProperty.removeListener(TRANSPORT_PROPERTY_LISTENER);
             property.addListener(TRANSPORT_PROPERTY_LISTENER);
             transportConfigProperty = property;
@@ -139,8 +139,8 @@ public final class ClusterServerConfigManager {
         AssertUtil.notNull(property, "cluster server flow config dynamic property cannot be null");
         synchronized (GLOBAL_FLOW_PROPERTY_LISTENER) {
             RecordLog.info(
-                "[ClusterServerConfigManager] Registering new server global flow dynamic property "
-                    + "to Sentinel server config manager");
+                    "[ClusterServerConfigManager] Registering new server global flow dynamic property "
+                            + "to Sentinel server config manager");
             globalFlowProperty.removeListener(GLOBAL_FLOW_PROPERTY_LISTENER);
             property.addListener(GLOBAL_FLOW_PROPERTY_LISTENER);
             globalFlowProperty = property;
@@ -276,7 +276,7 @@ public final class ClusterServerConfigManager {
         private synchronized void applyConfig(ServerTransportConfig config) {
             if (!isValidTransportConfig(config)) {
                 RecordLog.warn(
-                    "[ClusterServerConfigManager] Invalid cluster server transport config, ignoring: " + config);
+                        "[ClusterServerConfigManager] Invalid cluster server transport config, ignoring: " + config);
                 return;
             }
             RecordLog.info("[ClusterServerConfigManager] Updating new server transport config: " + config);
@@ -315,7 +315,7 @@ public final class ClusterServerConfigManager {
         private synchronized void applyGlobalFlowConfig(ServerFlowConfig config) {
             if (!isValidFlowConfig(config)) {
                 RecordLog.warn(
-                    "[ClusterServerConfigManager] Invalid cluster server global flow config, ignoring: " + config);
+                        "[ClusterServerConfigManager] Invalid cluster server global flow config, ignoring: " + config);
                 return;
             }
             RecordLog.info("[ClusterServerConfigManager] Updating new server global flow config: " + config);
@@ -351,8 +351,8 @@ public final class ClusterServerConfigManager {
 
     public static boolean isValidFlowConfig(ServerFlowConfig config) {
         return config != null && config.getMaxOccupyRatio() >= 0 && config.getExceedCount() >= 0
-            && config.getMaxAllowedQps() >= 0
-            && FlowRuleUtil.isWindowConfigValid(config.getSampleCount(), config.getIntervalMs());
+                && config.getMaxAllowedQps() >= 0
+                && FlowRuleUtil.isWindowConfigValid(config.getSampleCount(), config.getIntervalMs());
     }
 
     public static double getExceedCount(String namespace) {
@@ -463,5 +463,6 @@ public final class ClusterServerConfigManager {
         ClusterServerConfigManager.maxAllowedQps = maxAllowedQps;
     }
 
-    private ClusterServerConfigManager() {}
+    private ClusterServerConfigManager() {
+    }
 }
