@@ -16,10 +16,10 @@
 package com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker;
 
 import com.alibaba.csp.sentinel.context.Context;
-import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.slots.block.degrade.DegradeRule;
 
 /**
+ * 基本的熔断器接口
  * <p>Basic <a href="https://martinfowler.com/bliki/CircuitBreaker.html">circuit breaker</a> interface.</p>
  *
  * @author Eric Zhao
@@ -57,7 +57,7 @@ public interface CircuitBreaker {
     void onRequestComplete(Context context);
 
     /**
-     * Circuit breaker state.
+     * 熔断器状态
      */
     enum State {
         /**

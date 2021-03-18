@@ -57,6 +57,8 @@ public abstract class LeapArray<T> {
 
     /**
      * 将时间分割后的总的窗口数为: {@code sampleCount = intervalInMs / windowLengthInMs}.
+     * <p>
+     * 对于分钟维度的设置，sampleCount为60，intervalInMs为60 * 1000
      *
      * @param sampleCount  滑动窗口的窗口数量
      * @param intervalInMs the total time interval of this {@link LeapArray} in milliseconds
@@ -113,7 +115,7 @@ public abstract class LeapArray<T> {
     }
 
     /**
-     * 计算当前时间在窗口中的起始位置
+     * 计算该窗口的理论开始时间
      *
      * @param timeMillis
      * @return
@@ -134,7 +136,7 @@ public abstract class LeapArray<T> {
         }
 
         int idx = this.calculateTimeIdx(timeMillis);
-        // 计算当前时间在窗口中的起始位置
+        // 计算该窗口的理论开始时间
         long windowStart = this.calculateWindowStart(timeMillis);
 
         /*
@@ -144,7 +146,7 @@ public abstract class LeapArray<T> {
          * (2) Bucket is up-to-date, then just return the bucket.
          * (3) Bucket is deprecated, then reset current bucket and clean all deprecated buckets.
          */
-        while (true) {
+        while (true) { // 嵌套在一个循环中，因为有并发的情况
             // 从采样数组中根据索引获取缓存的时间窗口
             WindowWrap<T> old = array.get(idx);
             // array数组长度不宜过大，否则old很多情况下都命中不了，就会创建很多个WindowWrap对象
@@ -215,8 +217,8 @@ public abstract class LeapArray<T> {
                     // Contention failed, the thread will yield its time slice to wait for bucket available.
                     Thread.yield();
                 }
-            } else if (windowStart < old.windowStart()) { // 这个条件不可能存在
-                // Should not go through here, as the provided time is already behind.
+            } else if (windowStart < old.windowStart()) {
+                // 正常情况都不会走到这个分支，异常情况其实就是时钟回拨，这里返回一个WindowWrap是容错
                 return new WindowWrap<>(windowLengthInMs, windowStart, newEmptyBucket(timeMillis));
             }
         }

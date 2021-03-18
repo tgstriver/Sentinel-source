@@ -15,19 +15,19 @@
  */
 package com.alibaba.csp.sentinel.demo.system;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import com.alibaba.csp.sentinel.util.TimeUtil;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import com.alibaba.csp.sentinel.slots.system.SystemRule;
 import com.alibaba.csp.sentinel.slots.system.SystemRuleManager;
+import com.alibaba.csp.sentinel.util.TimeUtil;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author jialiang.linjl
@@ -49,37 +49,33 @@ public class SystemGuardDemo {
         initSystemRule();
 
         for (int i = 0; i < threadCount; i++) {
-            Thread entryThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    while (true) {
-                        Entry entry = null;
+            Thread entryThread = new Thread(() -> {
+                while (true) {
+                    Entry entry = null;
+                    try {
+                        entry = SphU.entry("methodA", EntryType.IN);
+                        pass.incrementAndGet();
                         try {
-                            entry = SphU.entry("methodA", EntryType.IN);
-                            pass.incrementAndGet();
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(20);
-                            } catch (InterruptedException e) {
-                                // ignore
-                            }
-                        } catch (BlockException e1) {
-                            block.incrementAndGet();
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(20);
-                            } catch (InterruptedException e) {
-                                // ignore
-                            }
-                        } catch (Exception e2) {
-                            // biz exception
-                        } finally {
-                            total.incrementAndGet();
-                            if (entry != null) {
-                                entry.exit();
-                            }
+                            TimeUnit.MILLISECONDS.sleep(20);
+                        } catch (InterruptedException e) {
+                            // ignore
+                        }
+                    } catch (BlockException e1) {
+                        block.incrementAndGet();
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(20);
+                        } catch (InterruptedException e) {
+                            // ignore
+                        }
+                    } catch (Exception e2) {
+                        // biz exception
+                    } finally {
+                        total.incrementAndGet();
+                        if (entry != null) {
+                            entry.exit();
                         }
                     }
                 }
-
             });
             entryThread.setName("working-thread");
             entryThread.start();
@@ -135,8 +131,8 @@ public class SystemGuardDemo {
                 oldBlock = globalBlock;
 
                 System.out.println(seconds + ", " + TimeUtil.currentTimeMillis() + ", total:"
-                    + oneSecondTotal + ", pass:"
-                    + oneSecondPass + ", block:" + oneSecondBlock);
+                        + oneSecondTotal + ", pass:"
+                        + oneSecondPass + ", block:" + oneSecondBlock);
                 if (seconds-- <= 0) {
                     stop = true;
                 }

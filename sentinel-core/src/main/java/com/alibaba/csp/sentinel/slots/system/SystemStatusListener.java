@@ -15,15 +15,14 @@
  */
 package com.alibaba.csp.sentinel.slots.system;
 
-import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
-import java.util.concurrent.TimeUnit;
-
 import com.alibaba.csp.sentinel.Constants;
 import com.alibaba.csp.sentinel.log.RecordLog;
 import com.alibaba.csp.sentinel.util.StringUtil;
-
 import com.sun.management.OperatingSystemMXBean;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author jialiang.linjl
@@ -62,13 +61,12 @@ public class SystemStatusListener implements Runnable {
              */
             double systemCpuUsage = osBean.getSystemCpuLoad();
 
-            // calculate process cpu usage to support application running in container environment
+            // 计算进程cpu使用情况，以支持在容器环境中运行应用程序
             RuntimeMXBean runtimeBean = ManagementFactory.getPlatformMXBean(RuntimeMXBean.class);
             long newProcessCpuTime = osBean.getProcessCpuTime();
             long newProcessUpTime = runtimeBean.getUptime();
             int cpuCores = osBean.getAvailableProcessors();
-            long processCpuTimeDiffInMs = TimeUnit.NANOSECONDS
-                    .toMillis(newProcessCpuTime - processCpuTime);
+            long processCpuTimeDiffInMs = TimeUnit.NANOSECONDS.toMillis(newProcessCpuTime - processCpuTime);
             long processUpTimeDiffInMs = newProcessUpTime - processUpTime;
             double processCpuUsage = (double) processCpuTimeDiffInMs / processUpTimeDiffInMs / cpuCores;
             processCpuTime = newProcessCpuTime;

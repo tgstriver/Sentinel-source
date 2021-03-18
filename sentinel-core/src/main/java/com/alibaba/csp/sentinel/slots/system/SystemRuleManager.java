@@ -15,13 +15,6 @@
  */
 package com.alibaba.csp.sentinel.slots.system;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import com.alibaba.csp.sentinel.Constants;
 import com.alibaba.csp.sentinel.EntryType;
 import com.alibaba.csp.sentinel.concurrent.NamedThreadFactory;
@@ -31,6 +24,13 @@ import com.alibaba.csp.sentinel.property.SentinelProperty;
 import com.alibaba.csp.sentinel.property.SimplePropertyListener;
 import com.alibaba.csp.sentinel.slotchain.ResourceWrapper;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <p>
@@ -95,6 +95,7 @@ public final class SystemRuleManager {
     static {
         checkSystemStatus.set(false);
         statusListener = new SystemStatusListener();
+        // 每隔1秒就获取一次系统当前的信息(cpu使用情况、系统负载等)
         scheduler.scheduleAtFixedRate(statusListener, 0, 1, TimeUnit.SECONDS);
         currentProperty.addListener(listener);
     }
@@ -282,7 +283,7 @@ public final class SystemRuleManager {
     }
 
     /**
-     * Apply {@link SystemRule} to the resource. Only inbound traffic will be checked.
+     * Apply {@link SystemRule} to the resource. 只会检查入口流量
      *
      * @param resourceWrapper the resource.
      * @throws BlockException when any system rule's threshold is exceeded.
@@ -291,6 +292,7 @@ public final class SystemRuleManager {
         if (resourceWrapper == null) {
             return;
         }
+
         // Ensure the checking switch is on.
         if (!checkSystemStatus.get()) {
             return;

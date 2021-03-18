@@ -58,7 +58,7 @@ public class ContextUtil {
     private static final Context NULL_CONTEXT = new NullContext();
 
     static {
-        // Cache the entrance node for default context.
+        // 为默认上下文缓存入口节点
         initDefaultContext();
     }
 

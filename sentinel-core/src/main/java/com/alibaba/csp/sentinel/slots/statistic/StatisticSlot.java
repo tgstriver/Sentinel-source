@@ -68,6 +68,7 @@ public class StatisticSlot extends AbstractLinkedProcessorSlot<DefaultNode> {
                 context.getCurEntry().getOriginNode().addPassRequest(count);
             }
 
+            // Sentinel针对所有的入口流量，使用了一个全局的ENTRY_NODE进行统计，所以我们也要知道，系统保护规则是全局的，和具体的某个资源没有关系
             if (resourceWrapper.getEntryType() == EntryType.IN) {
                 // Add count for global inbound entry node for global statistics.
                 Constants.ENTRY_NODE.increaseThreadNum();

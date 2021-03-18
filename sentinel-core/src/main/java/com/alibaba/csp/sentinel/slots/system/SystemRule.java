@@ -38,7 +38,7 @@ import com.alibaba.csp.sentinel.slots.block.AbstractRule;
 public class SystemRule extends AbstractRule {
 
     /**
-     * negative value means no threshold checking.
+     * 负值表示不进行系统负载检查
      */
     private double highestSystemLoad = -1;
     /**

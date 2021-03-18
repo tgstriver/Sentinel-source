@@ -15,13 +15,6 @@
  */
 package com.alibaba.csp.sentinel.slots.block.degrade;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import com.alibaba.csp.sentinel.log.RecordLog;
 import com.alibaba.csp.sentinel.property.DynamicSentinelProperty;
 import com.alibaba.csp.sentinel.property.PropertyListener;
@@ -33,6 +26,13 @@ import com.alibaba.csp.sentinel.slots.block.degrade.circuitbreaker.ResponseTimeC
 import com.alibaba.csp.sentinel.util.AssertUtil;
 import com.alibaba.csp.sentinel.util.StringUtil;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 /**
  * The rule manager for circuit breaking rules ({@link DegradeRule}).
  *
@@ -42,12 +42,14 @@ import com.alibaba.csp.sentinel.util.StringUtil;
  */
 public final class DegradeRuleManager {
 
+    /**
+     * 一个资源可以对应到多个熔断器，key为资源名称
+     */
     private static volatile Map<String, List<CircuitBreaker>> circuitBreakers = new HashMap<>();
     private static volatile Map<String, Set<DegradeRule>> ruleMap = new HashMap<>();
 
     private static final RulePropertyListener LISTENER = new RulePropertyListener();
-    private static SentinelProperty<List<DegradeRule>> currentProperty
-        = new DynamicSentinelProperty<>();
+    private static SentinelProperty<List<DegradeRule>> currentProperty = new DynamicSentinelProperty<>();
 
     static {
         currentProperty.addListener(LISTENER);
@@ -143,7 +145,7 @@ public final class DegradeRuleManager {
             return currentProperty.updateValue(allRules);
         } catch (Throwable e) {
             RecordLog.error("[DegradeRuleManager] Unexpected error when setting circuit breaking"
-                + " rules for resource: " + resourceName, e);
+                    + " rules for resource: " + resourceName, e);
             return false;
         }
     }
@@ -182,7 +184,7 @@ public final class DegradeRuleManager {
 
     public static boolean isValidRule(DegradeRule rule) {
         boolean baseValid = rule != null && !StringUtil.isBlank(rule.getResource())
-            && rule.getCount() >= 0 && rule.getTimeWindow() > 0;
+                && rule.getCount() >= 0 && rule.getTimeWindow() > 0;
         if (!baseValid) {
             return false;
         }
