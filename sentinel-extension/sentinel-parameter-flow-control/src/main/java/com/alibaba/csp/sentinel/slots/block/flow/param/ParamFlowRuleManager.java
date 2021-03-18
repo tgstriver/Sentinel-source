@@ -15,16 +15,16 @@
  */
 package com.alibaba.csp.sentinel.slots.block.flow.param;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 import com.alibaba.csp.sentinel.log.RecordLog;
 import com.alibaba.csp.sentinel.property.DynamicSentinelProperty;
 import com.alibaba.csp.sentinel.property.PropertyListener;
 import com.alibaba.csp.sentinel.property.SentinelProperty;
 import com.alibaba.csp.sentinel.util.AssertUtil;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manager for frequent ("hot-spot") parameter flow rules.
@@ -138,7 +138,11 @@ public final class ParamFlowRuleManager {
                 List<ParamFlowRule> oldRuleList = new ArrayList<>(entry.getValue());
                 oldRuleList.removeAll(newRuleList);
                 for (ParamFlowRule rule : oldRuleList) {
-                    ParameterMetricStorage.getParamMetricForResource(resource).clearForRule(rule);
+                    // 修复了https://github.com/alibaba/Sentinel/issues/1895
+                    ParameterMetric parameterMetric = ParameterMetricStorage.getParamMetricForResource(resource);
+                    if (parameterMetric != null) {
+                        parameterMetric.clearForRule(rule);
+                    }
                 }
             }
 
@@ -146,5 +150,6 @@ public final class ParamFlowRuleManager {
         }
     }
 
-    private ParamFlowRuleManager() {}
+    private ParamFlowRuleManager() {
+    }
 }
